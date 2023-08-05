@@ -11,13 +11,13 @@ interface User {
   password: string;
 }
 
-const createUser = async (user: schema.NewUser) => {
+const createUser = async (user: schema.NewUser): Promise<User> => {
   logger.verbose(`Creating user: ${JSON.stringify(user)}`);
-  const response = await db.insert(schema.user).values(user).returning();
-  return response[0];
+  const users = await db.insert(schema.user).values(user).returning();
+  return users[0];
 };
 
-const getUsers = async () => {
+const getUsers = async (): Promise<User[]> => {
   const users: schema.User[] = await db.select().from(schema.user);
   return users;
 };
@@ -30,4 +30,19 @@ const getUser = async (id: string): Promise<User> => {
   return user[0];
 };
 
-export { createUser, getUsers, getUser };
+const updateUser = async (user: schema.NewUser): Promise<User> => {
+  logger.verbose(`Updating user: ${JSON.stringify(user)}`);
+  const users = await db
+    .update(schema.user)
+    .set(user)
+    .where(eq(schema.user.id, user.id))
+    .returning();
+  return users[0];
+};
+
+const deleteUser = async (id: string) => {
+  logger.verbose(`Deleting user: ${id}`);
+  await db.delete(schema.user).where(eq(schema.user.id, id));
+};
+
+export { createUser, getUsers, getUser, updateUser, deleteUser };

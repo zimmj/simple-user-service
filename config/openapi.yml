@@ -101,6 +101,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     put:
       description: Updates a own-user by id
       tags:
@@ -146,14 +152,6 @@ paths:
 
 components:
   schemas:
-    HelloResponse:
-      type: object
-      additionalProperties: false
-      required:
-        - message
-      properties:
-        message:
-          type: string
     User:
       type: object
       additionalProperties: false
@@ -209,4 +207,14 @@ components:
         - id
       properties:
         id:
+          type: string
+    Error:
+      type: object
+      additionalProperties: false
+      required:
+        - message
+      properties:
+        message:
+          type: string
+        type:
           type: string

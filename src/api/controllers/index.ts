@@ -1,2 +1,1 @@
-export * from './greetings';
-export * from './house';
+export * from './user';
