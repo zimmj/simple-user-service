@@ -1,0 +1,52 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "id": "f9d585de-ea4c-461e-97da-8cb7a9a7c2cc",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "house": {
+      "name": "house",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+          "type": "house_colors",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "house_colors": {
+      "name": "house_colors",
+      "values": {
+        "red": "red",
+        "blue": "blue",
+        "green": "green"
+      }
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}

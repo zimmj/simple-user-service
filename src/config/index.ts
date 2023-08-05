@@ -28,6 +28,11 @@ interface Config {
   morganLogger: boolean;
   morganBodyLogger: boolean;
   loggerLevel: LogLevel;
+  DB_HOST: string;
+  DB_PORT: number;
+  DB_USER: string;
+  DB_PASSWORD: string;
+  DATABASE_NAME: string;
 }
 
 const config: Config = {
@@ -35,6 +40,11 @@ const config: Config = {
   morganLogger: parsedEnv.MORGAN_LOGGER as boolean,
   morganBodyLogger: parsedEnv.MORGAN_BODY_LOGGER as boolean,
   loggerLevel: parsedEnv.LOGGER_LEVEL as LogLevel,
+  DB_HOST: parsedEnv.DB_HOST as string,
+  DB_PORT: parsedEnv.DB_PORT as number,
+  DB_USER: parsedEnv.DB_USER as string,
+  DB_PASSWORD: parsedEnv.DB_PASSWORD as string,
+  DATABASE_NAME: parsedEnv.DATABASE_NAME as string,
 };
 
 export default config;

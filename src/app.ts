@@ -1,11 +1,13 @@
+import config from './config';
+import logger from './utils/logger';
 import createServer from './utils/server';
 
 createServer()
   .then((server) => {
-    server.listen(3000, () => {
-      console.info(`Listening on http://localhost:3000`);
+    server.listen(config.port, () => {
+      logger.info(`Listening on http://localhost:${config.port}`);
     });
   })
   .catch((err) => {
-    console.error(`Error: ${err}`);
+    logger.error(`Error: ${err}`);
   });
