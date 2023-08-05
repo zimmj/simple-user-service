@@ -6,10 +6,10 @@ A user looks like:
 
 ```yml
 user:
-    id: uuid
-    name: string
-    email: string
-    password: string
+  id: uuid
+  name: string
+  email: string
+  password: string
 ```
 
 ## Run with docker
@@ -25,15 +25,18 @@ It is exposed on port: 3000.
 
 Following data can be used in the [swagger ui](http://localhost:3000/swagger)
 
-todo: 
+todo:
+
 - add postgres to compose file
 - add dump to postgres
 - describe here, ready to use user.
 
 ## Run it locally
+
 To run this service locally a postgres db need to run.
 The connection information need to be changed in the file: [.env.dev](./config/.env.dev)
 The db infos are as following:
+
 ```yaml
 DB_HOST=localhost
 DB_PORT=5432
@@ -43,17 +46,25 @@ DATABASE_NAME=simple_user_service
 ```
 
 The database with need to be created in the postgres db:
+
 ```sql
 CREATE DATABASE simple_user_service;
 ```
 
 There is an migration which can be run with:
+
 ```bash
 yarn run:migration
 ```
 
 This creates the needed tables in the db.
 
+To run the application in developer mode:
+
+```bash
+yarn install
+yarn dev
+```
 
 This Repository consist of an skeleton for a simple web api with a basic layer architecture:
 

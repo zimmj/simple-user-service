@@ -20,32 +20,38 @@ tags:
     description: Greeting APIs
 
 paths:
-  /hello:
-    get:
-      description: Returns 'Hello <name>/stranger!!!' to the caller
+  /signIn:
+    post:
+      description: Sign in a user and return jwt token
       tags:
-        - greeting
-      operationId: hello
-      parameters:
-        - name: name
-          required: false
-          in: query
-          description: The name of a caller
-          schema:
-            type: string
+        - users
+      operationId: signIn
+      requestBody:
+        description: User to sign in into the application
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignIn'
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HelloResponse'
-  /house:
+                type: object
+                additionalProperties: false
+                required:
+                  - token
+                properties:
+                  token:
+                    type: string
+  /users:
     get:
-      description: Returns all houses
+      description: Returns all users
       tags:
-        - house
-      operationId: allHouses
+        - users
+      operationId: getUsers
       responses:
         200:
           description: Success
@@ -54,19 +60,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/House'
+                  $ref: '#/components/schemas/User'
     post:
-      description: Creates a new house
+      description: Creates a new User
       tags:
-        - house
-      operationId: createHouse
+        - users
+      operationId: createUser
       requestBody:
-        description: House object that needs to be added to the store
+        description: User to object to add to the db
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateHouse'
+              $ref: '#/components/schemas/CreateUser'
       responses:
         201:
           description: Success
@@ -74,46 +80,69 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdReturn'
-  /house/{id}:
+  /users/{id}:
     get:
-      description: Returns a house by id
+      description: Returns a user by id
       tags:
-        - house
-      operationId: houseById
+        - users
+      operationId: getUserById
       parameters:
         - name: id
           required: true
           in: path
-          description: The id of a house
+          description: The id of the user
           schema:
             type: string
+            format: uuid
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/House'
+                $ref: '#/components/schemas/User'
+    put:
+      description: Updates a own-user by id
+      tags:
+        - users
+      operationId: updateUserById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The id of the user
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: User to object to add to the db
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        204:
+          description: User was updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdReturn'
     delete:
-      description: Deletes a house by id
+      description: Deletes user by id, only the user can do it.
       tags:
-        - house
-      operationId: deleteHouseById
+        - users
+      operationId: deleteOwnUserByID
       parameters:
         - name: id
           required: true
           in: path
-          description: The id of a house
+          description: The id of own user
           schema:
             type: string
       responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: string
-                example: 8e190efe-1e76-446f-bced-2807699074dc
+        202:
+          description: Delete request was accepted
 
 components:
   schemas:
@@ -125,37 +154,54 @@ components:
       properties:
         message:
           type: string
-    House:
+    User:
       type: object
       additionalProperties: false
       required:
         - id
+        - name
       properties:
         id:
           type: string
         name:
           type: string
-        color:
+        email:
           type: string
-          enum:
-            - red
-            - green
-            - blue
-    CreateHouse:
+          format: email
+          pattern: ^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$
+    CreateUser:
       type: object
       additionalProperties: false
       required:
         - name
-        - color
+        - email
+        - password
       properties:
         name:
           type: string
-        color:
+        email:
           type: string
-          enum:
-            - red
-            - green
-            - blue
+          format: email
+          pattern: ^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$
+        password:
+          type: string
+          minLength: 8
+          format: password
+    SignIn:
+      type: object
+      additionalProperties: false
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          pattern: ^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$
+        password:
+          type: string
+          minLength: 8
+          format: password
     IdReturn:
       type: object
       additionalProperties: false
