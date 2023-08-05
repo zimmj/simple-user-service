@@ -2,8 +2,10 @@ import { eq } from 'drizzle-orm';
 
 import * as schema from './schema';
 import db from './db';
+import logger from '../utils/logger';
 
 const createHouse = async (house: schema.NewHouse) => {
+  logger.verbose(`Creating house: ${JSON.stringify(house)}`);
   const response = await db.insert(schema.house).values(house).returning();
   return response[0].id;
 };

@@ -22,6 +22,8 @@ export default async function createServer(): Promise<Express> {
 
   server.use('/swagger', swaggerUi.serve);
   server.get('/swagger', swaggerUi.setup(apiDefinition));
+
+  server.use('/swagger/openapi.yml', express.static(yamlSpecFile));
   server.use(bodyParser.json());
 
   if (config.morganLogger) {

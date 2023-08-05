@@ -13,26 +13,26 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-- url: /api/v1
- 
+  - url: /api/v1
+
 tags:
   - name: greeting
     description: Greeting APIs
- 
+
 paths:
   /hello:
     get:
       description: Returns 'Hello <name>/stranger!!!' to the caller
-      tags: 
+      tags:
         - greeting
       operationId: hello
       parameters:
-      - name: name
-        required: false
-        in: query
-        description: The name of a caller
-        schema:
-          type: string
+        - name: name
+          required: false
+          in: query
+          description: The name of a caller
+          schema:
+            type: string
       responses:
         200:
           description: Success
@@ -40,7 +40,81 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HelloResponse'
- 
+  /house:
+    get:
+      description: Returns all houses
+      tags:
+        - house
+      operationId: allHouses
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/House'
+    post:
+      description: Creates a new house
+      tags:
+        - house
+      operationId: createHouse
+      requestBody:
+        description: House object that needs to be added to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHouse'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdReturn'
+  /house/{id}:
+    get:
+      description: Returns a house by id
+      tags:
+        - house
+      operationId: houseById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The id of a house
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/House'
+    delete:
+      description: Deletes a house by id
+      tags:
+        - house
+      operationId: deleteHouseById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: The id of a house
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 8e190efe-1e76-446f-bced-2807699074dc
+
 components:
   schemas:
     HelloResponse:
@@ -50,4 +124,43 @@ components:
         - message
       properties:
         message:
+          type: string
+    House:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        color:
+          type: string
+          enum:
+            - red
+            - green
+            - blue
+    CreateHouse:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - color
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+          enum:
+            - red
+            - green
+            - blue
+    IdReturn:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+      properties:
+        id:
           type: string
