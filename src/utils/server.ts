@@ -30,7 +30,6 @@ export default async function createServer(): Promise<Express> {
   morganBody(server);
 
   const validatorOptions = {
-    coerceTypes: true,
     apiSpec: yamlSpecFile,
     validateRequests: true,
     validateResponses: true,
@@ -59,7 +58,7 @@ export default async function createServer(): Promise<Express> {
   const connect = connector(api, apiDefinition, {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onCreateRoute: (method: string, descriptor: any[]) => {
-      logger.info(
+      logger.verbose(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         `${method}: ${descriptor[0]} : ${(descriptor[1] as any).name}`,
       );
