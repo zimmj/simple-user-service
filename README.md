@@ -1,4 +1,59 @@
-# Express Web API skeleton
+# Simple User service
+
+This is a example project of an simple user service.
+
+A user looks like:
+
+```yml
+user:
+    id: uuid
+    name: string
+    email: string
+    password: string
+```
+
+## Run with docker
+
+This repository is dockerized, therefore can be build and run with any container tools.
+
+As there is a working compose file, the simplest is to run docker-compose up in the root directory.
+It will build the docker container and run the application with a postgres server attached to it.
+
+The postgres is created with an example dump, to have some information ready to try the service out.
+
+It is exposed on port: 3000.
+
+Following data can be used in the [swagger ui](http://localhost:3000/swagger)
+
+todo: 
+- add postgres to compose file
+- add dump to postgres
+- describe here, ready to use user.
+
+## Run it locally
+To run this service locally a postgres db need to run.
+The connection information need to be changed in the file: [.env.dev](./config/.env.dev)
+The db infos are as following:
+```yaml
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=root
+DATABASE_NAME=simple_user_service
+```
+
+The database with need to be created in the postgres db:
+```sql
+CREATE DATABASE simple_user_service;
+```
+
+There is an migration which can be run with:
+```bash
+yarn run:migration
+```
+
+This creates the needed tables in the db.
+
 
 This Repository consist of an skeleton for a simple web api with a basic layer architecture:
 

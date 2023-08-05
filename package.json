@@ -1,9 +1,9 @@
 {
-  "name": "expess-web-api-skeleton",
+  "name": "simple-user-service",
   "version": "1.0.0",
-  "description": "This is a skeleton app for an express web api server",
+  "description": "This is an example of a simple user service. As it create the jwt tokes itself, it is not a good solution for a real world application.",
   "main": "app.js",
-  "repository": "https://github.com/zimmj/expess-web-api-skeleton.git",
+  "repository": "https://github.com/zimmj/simple-user-service.git",
   "author": "Joel <zimmi.94@live.de>",
   "license": "MIT",
   "scripts": {
