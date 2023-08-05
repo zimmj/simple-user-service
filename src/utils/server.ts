@@ -1,5 +1,6 @@
 import express from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
+import swaggerUi from 'swagger-ui-express';
 import bodyParser from 'body-parser';
 import { Express } from 'express-serve-static-core';
 import { connector, summarise } from 'swagger-routes-express';
@@ -19,6 +20,8 @@ export default async function createServer(): Promise<Express> {
 
   const server = express();
 
+  server.use('/swagger', swaggerUi.serve);
+  server.get('/swagger', swaggerUi.setup(apiDefinition));
   server.use(bodyParser.json());
 
   if (config.morganLogger) {

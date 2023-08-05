@@ -29,7 +29,7 @@ describe('GET /hello', () => {
       .end((err, res) => {
         if (err) return done(err);
         expect(res.body).toMatchObject({ message: 'Hello, Test Name!' });
-        done();
+        return done();
       });
   });
 
