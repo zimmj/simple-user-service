@@ -1,15 +1,14 @@
 import { InferModel } from 'drizzle-orm';
-import { pgEnum, pgTable, text, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, text, varchar } from 'drizzle-orm/pg-core';
 
-const houseColors = pgEnum('house_colors', ['red', 'blue', 'green']);
-
-const house = pgTable('house', {
+const user = pgTable('user', {
   id: varchar('id', { length: 191 }).primaryKey().notNull(),
   name: text('name'),
-  color: houseColors('color'),
+  email: text('email').primaryKey().notNull(),
+  password: text('password').notNull(),
 });
 
-type House = InferModel<typeof house, 'select'>;
-type NewHouse = InferModel<typeof house, 'insert'>;
+type User = InferModel<typeof user, 'select'>;
+type NewUser = InferModel<typeof user, 'insert'>;
 
-export { house, houseColors, House, NewHouse };
+export { user, User, NewUser };

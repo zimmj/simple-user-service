@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "f9d585de-ea4c-461e-97da-8cb7a9a7c2cc",
+  "id": "ea267979-36eb-48c1-9325-b6a1c96bd830",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "house": {
-      "name": "house",
+    "user": {
+      "name": "user",
       "schema": "",
       "columns": {
         "id": {
@@ -20,11 +20,17 @@
           "primaryKey": false,
           "notNull": false
         },
-        "color": {
-          "name": "color",
-          "type": "house_colors",
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -33,16 +39,7 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {
-    "house_colors": {
-      "name": "house_colors",
-      "values": {
-        "red": "red",
-        "blue": "blue",
-        "green": "green"
-      }
-    }
-  },
+  "enums": {},
   "schemas": {},
   "_meta": {
     "schemas": {},
