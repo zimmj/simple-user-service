@@ -42,6 +42,20 @@ const getUserById = async (req: express.Request, res: express.Response) => {
 
 const updateUserById = async (req: express.Request, res: express.Response) => {
   const { id } = req.params;
+
+  console.log(id);
+  const authenticatedUser: User = req.body.user;
+  if (authenticatedUser.id !== id) {
+    errorResponseHandler(
+      new TypedError(
+        'Authenticated user has not the same user id',
+        'unauthorized',
+      ),
+      res,
+    );
+    return;
+  }
+
   const user = req.body;
   userService
     .updateUser(user, id)
@@ -58,6 +72,17 @@ const deleteOwnUserByID = async (
   res: express.Response,
 ) => {
   const { id } = req.params;
+  const authenticatedUser: User = req.body.user;
+  if (authenticatedUser.id !== id) {
+    errorResponseHandler(
+      new TypedError(
+        'Authenticated user has not the same user id',
+        'unauthorized',
+      ),
+      res,
+    );
+    return;
+  }
   userService
     .deleteUser(id)
     .then(() => {
@@ -68,4 +93,46 @@ const deleteOwnUserByID = async (
     });
 };
 
-export { getUsers, getUserById, createUser, updateUserById, deleteOwnUserByID };
+const signIn = async (req: express.Request, res: express.Response) => {
+  const { email, password } = req.body;
+  userService
+    .signIn(email, password)
+    .then((token) => {
+      writeJsonResponse(res, 200, { token });
+    })
+    .catch((err) => {
+      errorResponseHandler(err, res);
+    });
+};
+
+const auth = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const bearerAuth: string | undefined = req.headers.authorization;
+  if (!bearerAuth) {
+    throw new TypedError('Missing token', 'unauthorized');
+  }
+
+  const token = bearerAuth.split(' ')[1];
+  const user = userService.authenticate(token);
+
+  if (!user) {
+    errorResponseHandler(new TypedError('Invalid Token', 'unauthorized'), res);
+    return;
+  }
+
+  req.body.user = user;
+  next();
+};
+
+export {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUserById,
+  deleteOwnUserByID,
+  signIn,
+  auth,
+};

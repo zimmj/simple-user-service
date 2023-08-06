@@ -30,6 +30,14 @@ const getUser = async (id: string): Promise<User> => {
   return user[0];
 };
 
+const findUserByEmail = async (email: string): Promise<User> => {
+  const user: schema.User[] = await db
+    .select()
+    .from(schema.user)
+    .where(eq(schema.user.email, email));
+  return user[0];
+};
+
 const updateUser = async (user: schema.NewUser): Promise<User> => {
   logger.verbose(`Updating user: ${JSON.stringify(user)}`);
   const users = await db
@@ -45,4 +53,11 @@ const deleteUser = async (id: string) => {
   await db.delete(schema.user).where(eq(schema.user.id, id));
 };
 
-export { createUser, getUsers, getUser, updateUser, deleteUser };
+export {
+  createUser,
+  getUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+  findUserByEmail,
+};

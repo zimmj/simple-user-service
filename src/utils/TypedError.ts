@@ -1,4 +1,9 @@
-type ErrorType = 'internal_server_error' | 'not_found' | 'user_already_exists';
+type ErrorType =
+  | 'internal_server_error'
+  | 'not_found'
+  | 'user_already_exists'
+  | 'invalid_credentials'
+  | 'unauthorized';
 
 class TypedError extends Error {
   type: ErrorType;

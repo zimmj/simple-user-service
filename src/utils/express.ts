@@ -43,6 +43,12 @@ const errorResponseHandler = (err: TypedError, res: express.Response) => {
     case 'user_already_exists':
       writeErrorJsonResponse(res, 409, err);
       break;
+    case 'invalid_credentials':
+      writeErrorJsonResponse(res, 401, err);
+      break;
+    case 'unauthorized':
+      writeErrorJsonResponse(res, 403, err);
+      break;
     default:
       writeErrorJsonResponse(res, 500, err);
   }

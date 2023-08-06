@@ -11,6 +11,12 @@ type LogLevel =
   | 'debug'
   | 'silly';
 
+const getRandomBytes = (size: number): string => {
+  const array = new Uint32Array(size);
+  crypto.getRandomValues(array);
+  return array.join('');
+};
+
 const env = dotenvExtended.load({
   path: process.env.ENV_FILE,
   defaults: './config/.env.defaults',
@@ -25,6 +31,7 @@ const parsedEnv = dotenvParseVariables(env);
 
 interface Config {
   port: number;
+  tokenSecret: string;
   morganLogger: boolean;
   morganBodyLogger: boolean;
   loggerLevel: LogLevel;
@@ -37,6 +44,10 @@ interface Config {
 
 const config: Config = {
   port: parsedEnv.PORT as number,
+  tokenSecret:
+    parsedEnv.TOKEN_SECRET === 'secret'
+      ? getRandomBytes(128)
+      : (parsedEnv.TOKEN_SECRET as string),
   morganLogger: parsedEnv.MORGAN_LOGGER as boolean,
   morganBodyLogger: parsedEnv.MORGAN_BODY_LOGGER as boolean,
   loggerLevel: parsedEnv.LOGGER_LEVEL as LogLevel,

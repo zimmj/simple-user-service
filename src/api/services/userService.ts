@@ -1,8 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
+import * as jwt from 'jsonwebtoken';
 
 import { NewUser, User } from '../../db/schema';
 import * as userRepository from '../../db/userRepository';
 import { TypedError } from '../../utils/TypedError';
+import config from '../../config';
 
 interface CreateUser {
   name: string;
@@ -12,16 +13,15 @@ interface CreateUser {
 
 interface VisibleUser {
   id: string;
-  name: string;
+  name: string | null;
   email: string;
 }
 
 const createUser = (user: CreateUser): Promise<User> => {
-  const newUuiD = uuidv4();
+  const newUuiD = crypto.randomUUID();
   return userRepository
     .createUser({ id: newUuiD, ...user } as NewUser)
     .catch((err) => {
-      console.log(err);
       if (err.code === '23505') {
         throw new TypedError('User already exists', 'user_already_exists');
       }
@@ -66,4 +66,40 @@ const getUsers = (): Promise<VisibleUser[]> => {
   });
 };
 
-export { createUser, getUser, getUsers, updateUser, deleteUser, CreateUser };
+const createAuthToken = (user: VisibleUser): string => {
+  return jwt.sign(user, config.tokenSecret, { expiresIn: '1h' });
+};
+
+const signIn = async (email: string, password: string): Promise<string> => {
+  const user = await userRepository.findUserByEmail(email);
+  if (!user) {
+    throw new TypedError('Invalid Login/Password', 'invalid_credentials');
+  }
+  if (user.password !== password) {
+    throw new TypedError('Invalid Login/Password', 'invalid_credentials');
+  }
+  return createAuthToken({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  });
+};
+
+const authenticate = (token: string): VisibleUser => {
+  try {
+    return jwt.verify(token, config.tokenSecret) as VisibleUser;
+  } catch (err) {
+    throw new TypedError('Invalid Token', 'unauthorized');
+  }
+};
+
+export {
+  createUser,
+  getUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+  signIn,
+  CreateUser,
+  authenticate,
+};
