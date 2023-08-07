@@ -23,6 +23,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --production
 
 COPY --from=builder /app/dist ./dist
+COPY /config ./config
 
 EXPOSE 3000
 

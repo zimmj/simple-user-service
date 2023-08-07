@@ -212,7 +212,11 @@ describe('GET /api/v1/users/:id', () => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) return done(err);
-        expect(res.body).toMatchObject(mockUser);
+        expect(res.body).toMatchObject({
+          id: mockId,
+          name: user.name,
+          email: user.email,
+        });
         return done();
       });
   });

@@ -1,8 +1,7 @@
 # Simple User service
 
 This is a example project of an simple user service.
-
-A user looks like:
+A user has following fields.
 
 ```yml
 user:
@@ -12,6 +11,29 @@ user:
   password: string
 ```
 
+As it a simple show of concept project, the password are saved in plain text.
+
+The service consist of three layers:
+
+- controllers
+- services
+- data layer
+
+This service is written in type-script.
+It uses express for it's server functionality.
+
+The [open-api yaml definition](./config/openapi.yml) is used as main contract.
+All the defined endpoints are linked to the corresponding function in the controller layer by the package: swagger-routes-express.
+The routes are matched via the defined operation Id's.
+
+Validation of the request and response is made with the package: express-openapi-validator.
+This automatically validates all data coming in and going for there correctness as described in the open-api yaml.
+
+With this, I can guarantee, that this contract is correctly implemented and other developer can use this yaml to generate the client.
+
+In the data layer, I use drizzle as OMR to connect to the postgres database.
+It's a full fletched OMR with migration and allows type safe queries.
+
 ## Run with docker
 
 This repository is dockerized, therefore can be build and run with any container tools.
@@ -19,23 +41,38 @@ This repository is dockerized, therefore can be build and run with any container
 As there is a working compose file, the simplest is to run docker-compose up in the root directory.
 It will build the docker container and run the application with a postgres server attached to it.
 
-The postgres is created with an example dump, to have some information ready to try the service out.
+The postgres database is initialized with the [init.sql](./docker/init.sql).
+The content of it is the migration of drizzle
 
-It is exposed on port: 3000.
+The user service is exposed on the port: 3000.
 
-Following data can be used in the [swagger ui](http://localhost:3000/swagger)
+A good entry point is the [swagger ui](http://localhost:3000/swagger) as you can use it, to call the different endpoints.
 
-todo:
+To run service run docker compose up in the root directory:
 
-- add postgres to compose file
-- add dump to postgres
-- describe here, ready to use user.
+```bash
+docker compose up
+```
+
+Another option to call the service is to use the provided [postman collection](./content/simple-user-service.postman_collection.json).
+
+The flow of the service is as follows.
+
+1. Create a user
+2. Sign in with the user -> get JWT token
+
+With the JWT token you can:
+
+1. List all users
+2. Display a user
+3. Modify your user
+4. Delete your user
 
 ## Run it locally
 
 To run this service locally a postgres db need to run.
-The connection information need to be changed in the file: [.env.dev](./config/.env.dev)
-The db infos are as following:
+The database connection need to be given in the file: [.env.dev](./config/.env.dev).
+Provide as well the name of the database which should be used.
 
 ```yaml
 DB_HOST=localhost
@@ -45,58 +82,16 @@ DB_PASSWORD=root
 DATABASE_NAME=simple_user_service
 ```
 
-The database with need to be created in the postgres db:
-
-```sql
-CREATE DATABASE simple_user_service;
-```
-
-There is an migration which can be run with:
+Before running the application, the migration need to be run.
 
 ```bash
 yarn run:migration
 ```
 
-This creates the needed tables in the db.
+This creates the needed tables in the database and the service can be started.
 
 To run the application in developer mode:
 
 ```bash
-yarn install
 yarn dev
-```
-
-This Repository consist of an skeleton for a simple web api with a basic layer architecture:
-
-- controller Layer
-- service Layer
-- data access Layer
-
-THe routes from Controller to the express server are created by the open-api yml contract.
-All the defined endpoints need to be implemented with the correct tag name to create a connection.
-If one of the routes is missing, the build should fail.
-
-The contract is used to create an automatic validation, this validation need to know all used data-types.
-Otherwise the calls will fail.
-It is possible to add custom types and exclude special types from validation.
-See [Wiki Formats](https://github.com/cdimascio/express-openapi-validator/wiki/Documentation#%EF%B8%8F-formats-optional)
-
-The open-api contract is as well presented under /swagger, where a user can explore the different endpoints.
-
-This skeleton was created with the help of an medium blog post [medium article](https://losikov.medium.com/backend-api-server-development-with-node-js-from-scratch-to-production-fe3d3b860003)
-
-### Development on WSL [See description](https://www.cybertec-postgresql.com/en/postgresql-on-wsl2-for-windows-install-and-setup/)
-
-Install PostgresDB on wsl
-
-```bash
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-sudo apt-get update
-sudo apt-get -y install postgresql postgresql-contrib
-
-psql --version
-sudo service postgresql status
-
-sudo service postgresql start
 ```

@@ -1,13 +1,7 @@
 openapi: 3.0.3
 info:
-  title: Backend API example
-  description: Backend API example API declaration
-  termsOfService: http://swagger.io/terms/
-  contact:
-    email: losikov@gmail.com
-  license:
-    name: MIT
-    url: https://opensource.org/licenses/MIT
+  title: Simple user API
+  description: A simple user API, which does CRUD operations on users. Password is saved in plain text, because it is only a demo.
   version: 1.0.0
 externalDocs:
   description: Find out more about Swagger

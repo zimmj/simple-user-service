@@ -45,12 +45,16 @@ const deleteUser = (id: string): Promise<void> => {
   return userRepository.deleteUser(id);
 };
 
-const getUser = (id: string): Promise<User> => {
+const getUser = (id: string): Promise<VisibleUser> => {
   return userRepository.getUser(id).then((user) => {
     if (!user) {
       throw new TypedError(`User with id ${id} not found`, 'not_found');
     }
-    return user;
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
   });
 };
 
@@ -85,11 +89,11 @@ const signIn = async (email: string, password: string): Promise<string> => {
   });
 };
 
-const authenticate = (token: string): VisibleUser => {
+const authenticate = (token: string): VisibleUser | undefined => {
   try {
     return jwt.verify(token, config.tokenSecret) as VisibleUser;
   } catch (err) {
-    throw new TypedError('Invalid Token', 'unauthorized');
+    return undefined;
   }
 };
 

@@ -30,11 +30,7 @@ describe('auth', () => {
   });
 
   it('should throw error for invalid token', async () => {
-    try {
-      await userService.authenticate('invalid');
-      expect(true).toBe(false);
-    } catch (err) {
-      expect(err).toEqual(new TypedError('Invalid Token', 'unauthorized'));
-    }
+    const tokenUser = await userService.authenticate('invalid');
+    expect(tokenUser).toBeUndefined();
   });
 });

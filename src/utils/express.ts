@@ -1,6 +1,7 @@
 import { OutgoingHttpHeaders } from 'http';
 import * as express from 'express';
 import { TypedError } from './TypedError';
+import logger from './logger';
 
 const writeJsonResponse = (
   res: express.Response,
@@ -50,6 +51,7 @@ const errorResponseHandler = (err: TypedError, res: express.Response) => {
       writeErrorJsonResponse(res, 403, err);
       break;
     default:
+      logger.error(err);
       writeErrorJsonResponse(res, 500, err);
   }
 };
